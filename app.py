@@ -28,12 +28,7 @@ X = df.drop("Delivery_Time_min", axis=1)
 y = df["Delivery_Time_min"]
 
 # Train Test Split
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
 # Train Model
 model = LinearRegression()
@@ -58,29 +53,44 @@ st.subheader("Enter Order Details")
 
 distance = st.number_input("Distance (km)", min_value=0.0, value=8.5)
 
-weather = st.selectbox(
-    "Weather",
-    [0,1,2,3,4],
-    help="0=Cloudy, 1=Foggy, 2=Rainy, 3=Stormy, 4=Sunny"
-)
+weather_options = {
+    "Sunny": 0,
+    "Cloudy": 1,
+    "Rainy": 2,
+    "Stormy": 3,
+    "Foggy": 4
+}
 
-traffic = st.selectbox(
-    "Traffic Level",
-    [0,1,2],
-    help="0=Low, 1=Medium, 2=High"
-)
+weather = st.selectbox("Weather", list(weather_options.keys()))
+weather_encoded = weather_options[weather]
 
-time_day = st.selectbox(
-    "Time of Day",
-    [0,1,2,3],
-    help="0=Morning, 1=Afternoon, 2=Evening, 3=Night"
-)
+traffic_options = {
+    "Low": 0,
+    "Medium": 1,
+    "High": 2
+}
 
-vehicle = st.selectbox(
-    "Vehicle Type",
-    [0,1,2],
-    help="0=Bike, 1=Scooter, 2=Car"
-)
+traffic = st.selectbox("Traffic Level", list(traffic_options.keys()))
+traffic_encoded = traffic_options[traffic]
+
+time_options = {
+    "Morning": 0,
+    "Afternoon": 1,
+    "Evening": 2,
+    "Night": 3
+}
+
+time_day = st.selectbox("Time of Day", list(time_options.keys()))
+time_day_encoded = time_options[time_day]
+
+vehicle_options = {
+    "Bike": 0,
+    "Scooter": 1,
+    "Car": 2
+}
+
+vehicle = st.selectbox("Vehicle Type", list(vehicle_options.keys()))
+vehicle_encoded = vehicle_options[vehicle]
 
 prep_time = st.number_input(
     "Preparation Time (minutes)",
@@ -97,14 +107,14 @@ experience = st.number_input(
 # Prediction
 if st.button("Predict Delivery Time"):
 
-    data = [[
-        distance,
-        weather,
-        traffic,
-        time_day,
-        vehicle,
-        prep_time,
-        experience
+    data =[[
+    distance,
+    weather_encoded,
+    traffic_encoded,
+    time_day_encoded,
+    vehicle_encoded,
+    prep_time,
+    experience
     ]]
 
     prediction = model.predict(data)
